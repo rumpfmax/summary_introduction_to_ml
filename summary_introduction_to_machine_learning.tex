@@ -98,14 +98,40 @@ For i = 1:k\\
 After all iterations, select model:  $\hat{m} = \underset{m}{\operatorname{argmin}}\ \frac{1}{k} \sum_{i=1}^k \hat{R}_m^{(i)}$
 
 \subsection*{Ridge regression}
-Regularization: $\underset{w}{\operatorname{min}}\ \frac{1}{n} \sum_{i=1}^n (y_i - w^Tx_i)^2 + \lambda ||w||_2^2$\\
+Regularization(corresponds to MAP estimation): $\underset{w}{\operatorname{min}}\ \frac{1}{n} \sum_{i=1}^n (y_i - w^Tx_i)^2 + \lambda ||w||_2^2 = \underset{w}{\operatorname{argmax}}\ P(w)\Pi_i P(y_i | x_i w)$\\
+Sparse regression (L1, convex) encourages coefficients to be exactly 0 - automatic feature selection\\
 Closed form solution: $\hat{w} =(X^T X + \lambda I)^{-1} X^T y$\\
 Gradient: $\nabla_w (\frac{1}{n} \sum_{i=1}^n (y_i - w^Tx_i)^2 + \lambda ||w||_2^2) = \nabla_w \hat{R}(w) + 2 \lambda w$
 
 \subsection*{Standardization}
 Goal: each feature: $\mu = 0$, $\sigma^2 = 1$: $\tilde{x}_{i,j} = \frac{(x_{i,j}-\hat{\mu}_j)}{\hat{\sigma}_j}$\\
 $\hat{\mu}_j = \frac{1}{n}\sum_{i=1}^n x_{i,j}$, $\hat{\sigma}_j^2 = \frac{1}{n}\sum_{i=1}^n {(x_{i,j}-\hat{\mu}_j)}^2$ 
-
+\section{Dimension Reduction in unsupervised learning}
+\subsection*{Principal Component Analysis (linear)}
+Given $ D \subseteq \mathbb{R}^d, 1 \leq k \leq d, \Sigma = \frac{1}{n}\sum_{i=1}^n x_i x_i ^T, \mu = \frac{1}{n}\sum_i x_i = 0 $ (data is centered)\\
+$(W, z_1,...,z_n) = \operatorname{argmin} \sum_{i=1}^n ||W z_i - x_i||_2^2 $\\where $ W \in \mathbb{R}^{d \times k}$ is orthogonal ,$ z_1,...z_n \in \mathbb{R}^k $ is given by $ W = (v_1|...|v_k) $and$ z_i = W^T x_i = f(x)$ where $ \Sigma = \Sigma_{i=1}^d \lambda_i v_i v_i^T$ where $\lambda_1 \geq ... \geq \lambda_d \geq 0$\\
+The projection is chosen to minimize the reconstruction error, choose k such that most of the variance is explained (like k-means)
+\subsection*{Kernel PCA (nonlinear)}
+For k = 1: Kernel PCA\\
+$\alpha^* = \underset{\alpha^T K \alpha = 1}{\operatorname{argmax}} \alpha^T K^T K \alpha$\\
+With $K = \Sigma_{i=1}^n \lambda_i v_i v_i^T$ $ (\lambda_1 \geq ... \geq \lambda_d \geq 0)$ $ \alpha* = \frac{1}{\sqrt{\lambda_1}} v_1$\\
+For general k: Kernel PCA\\
+The kernel principal components are given by $\alpha^{(1)},...,\alpha^{(k)} \in \mathbb{R}^n$\\
+$\alpha^{(i)} = \frac{1}{\sqrt{\lambda_i}}$ with $K = \Sigma_{i=1}^n \lambda_i v_i v_i^T$\\
+A new point x is projected as z, $z_i = \Sigma_{j=1}^n \alpha_j^{(i)} k(x, x_j)$\\
+Kernel-PCA corresponds to applying PCA in the feature space induced by the kernel k.\\
+centering a kernel: $K' = K - KE - EK + EKE$ where $E = \frac{1}{n}[1,...,1][1,...1]^T$\\
+- complexity grow with number of data points, requires data specified as kernel
+\subsection*{Autoencoders}
+Goal: learn identity function $x \approx f(x; \theta)$\\
+$f(x; \theta) = f_{dec}(f_{enc}(x; \theta_1);\theta_2)$\\
+NN autoencoders are ANNs where one output unit for each of d input units, nr of hidden units smaller than nr of inputs. Optimize w s.t. output agrees with input.\\
+If activation func. is the identity, fitting NN autoencoder is equivalent to PCA.
+\section{Decision Theory}
+\subsection*{Bayesian Decision Theory}
+Given: $P(y|x)$, set of actions $A$ and cost function $C: Y \times A \rightarrow \mathbb{R}$\\
+$a^* = \underset{a \in A}{\operatorname{argmin}} \mathbb{E}_y [C(y, a) | x]$ (cost for prediction y when true label is a) \\
+for logistic regression:$ \underset{y}{\operatorname{argmax}} P(y|x) = sign (w^Tx)$\\
 \end{multicols}
 
 \end{document}
