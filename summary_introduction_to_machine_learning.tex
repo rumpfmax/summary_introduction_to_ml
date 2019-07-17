@@ -130,8 +130,14 @@ If activation func. is the identity, fitting NN autoencoder is equivalent to PCA
 \section{Decision Theory}
 \subsection*{Bayesian Decision Theory}
 Given: $P(y|x)$, set of actions $A$ and cost function $C: Y \times A \rightarrow \mathbb{R}$\\
-$a^* = \underset{a \in A}{\operatorname{argmin}} \mathbb{E}_y [C(y, a) | x]$ (cost for prediction y when true label is a) \\
-for logistic regression:$ \underset{y}{\operatorname{argmax}} P(y|x) = sign (w^Tx)$\\
+$a^* = \underset{a \in A}{\operatorname{argmin}} \mathbb{E}_y [C(y, a) | x]$ (cost for prediction a when true label is y) \\
+for logistic regression:$ \underset{y}{\operatorname{argmax}} P(y|x) = sign (w^Tx)$ (most likely class)\\
+Doubtful logistic regression is when we pick the most likely class only if we are confident enough.\\
+\subsection{MAP}
+1. choose likelihood function $\rightarrow$ loss function\\
+2. choose prior $\rightarrow$ regularizer\\
+3. optimize for MAP parameters, choose hyperparameters through cross-validation\\
+4. make predictions via Bayesian Decision Theory
 \end{multicols}
 
 \end{document}
