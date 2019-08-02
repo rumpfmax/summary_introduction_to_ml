@@ -52,13 +52,15 @@ Derivation rules: Chain rule: $D(f(g(x))) = Df(g(x))*Dg(x)$\\
 positive definiteness: $A$ is p.s.d., then A is a real symmetric matrix and $x^TAx \geq 0$ for all x\\
 Joint distribution: X, Y are RVs $F_{X,Y}(x,y) = \mathbb{P}(X \leq x, Y\leq y)$\\
 Joint density:$ f_{X,Y}(x, y) = \frac{\delta^2 F}{\delta x \delta y}(x, y)$\\
-Conditional Probability: $\mathbb{P}(A|B) = \frac{\mathbb{P}(A \cap B}{\mathbb{P}(B)}$\\
+Conditional Probability: $\mathbb{P}(A|B) = \frac{\mathbb{P}(A \cap B)}{\mathbb{P}(B)}$\\
 Law of total probability: $\mathbb{P}(B) = \Sigma_{i=1}^n \mathbb{P}(B|A_i)\mathbb{P}(A_i)$\\
 Bayes rule: $\mathbb{P}(A|B) = \mathbb{P}(B|A)\frac{\mathbb{P}(A)}{\mathbb{P}(B)}$\\
 Variance: $Var(X) = \mathbb{E}[(X - \mathbb{E}[X])^2] = \mathbb{E}[X^2] - \mathbb{E}[X]^2 \geq 0$\\
-
+Convexity: A twice differentiable function $f: \mathbb{R}^d \rightarrow \mathbb{R}$ is convex iff for any $x \in \mathbb{R}^d$ its Hessian is p.s.d\\
+Convex functions are closed under addition\\
 \section{Regression: Predict real valued labels}
 \subsection{Linear Regression}
+Goal: Measure distance between predicted and target values
 $f(x) = w_1 x_1 + \cdot \cdot \cdot + w_d x_d + w_0 = \widetilde{w}^T \widetilde{x}$ with \\
 $\widetilde{w} = [w_1 \cdot \cdot \cdot w_d,\ w_0 ]$ and $\widetilde{x} = [x_1 \cdot \cdot \cdot x_d,\ 1]$ \\
 Residual: $r_i = y_i - w^T x_i,\ x_i \in \mathbb{R}^d,\ y_i \in \mathbb{R}$ \\
@@ -67,7 +69,20 @@ Optimal weights: $w^* = \underset{w}{\operatorname{argmin}} \sum_{i=1}^n (y_i - 
 Closed form solution: $w^*=(X^T X)^{-1} X^T y$\\
 Gradient: $\nabla_w \hat{R}(w) = [\frac{\delta}{\delta w_1} \hat{R}(w) \cdot \cdot \cdot \frac{\delta}{\delta w_d} \hat{R}(w)] =  -2 \sum_{i=1}^n r_i x_i^T$\\
 Non-linear functions: $f(x) = \sum_{i=1}^D w_i \phi_i(x)$
-
+\subsection{Fisher consistency}
+Given a surrogate loss function $\psi : Y \times S \rightarrow \mathbb{R}$, the surrogate is said to be consistent with respect to the loss $L : Y \times S \rightarrow \mathbb{R}$, if every minimizer f of the surrogate risk function $R_{\psi}(f)$ is also a minimizer of the risk function $R_L (f)$. E.g. the hinge and the logistic losses are consistent with respect to the 0-1 loss.
+\subsection{Classification losses}
+$L_{perceptron}: \{ -1, 1 \} \times \mathbb{R} \rightarrow \mathbb{R}: y, f(x) \rightarrow \operatorname{max} (0, -yf(x))$\\
+Find the best separation hyperplane\\
+$L_{hinge}: \{ -1, 1 \} \times \mathbb{R} \rightarrow \mathbb{R}: y, f(x) \rightarrow \operatorname{max} (0, 1-yf(x))$\\
+Find large separation margin\\
+$L_{perceptron}: \{ -1, 1 \} \times \mathbb{R} \rightarrow \mathbb{R}: y, f(x) \rightarrow \operatorname{max} log(1 + exp(-yf(x))$\\
+Link to cross entropy and probabilistic interpretation\\
+\subsection{Classification}
+Accuracy: $\frac{TP + TN}{TP + TN + FP + FN}$\\
+Recall/Sensitivity/True positive rate/TPR: $\frac{TP}{TP + FN}$\\
+Specify or True negative rate/TNR: $\frac{TN}{TN + FP}$\\
+F1 score: $2* \frac{Precision \ast Recall}{Precision + Recall}$\\
 \subsection*{Convex function}
 $f : \mathbb{R}^d \rightarrow \mathbb{R} \text{ is convex} \Leftrightarrow x_1,x_2 \in \mathbb{R}^d, \lambda \in [0,1]:$ \\
 $f(\lambda x_1 + (1-\lambda) x_2) \leq \lambda f(x_1) + (1-\lambda) f(x_2)$
@@ -117,6 +132,9 @@ Gradient: $\nabla_w (\frac{1}{n} \sum_{i=1}^n (y_i - w^Tx_i)^2 + \lambda ||w||_2
 \subsection*{Standardization}
 Goal: each feature: $\mu = 0$, $\sigma^2 = 1$: $\tilde{x}_{i,j} = \frac{(x_{i,j}-\hat{\mu}_j)}{\hat{\sigma}_j}$\\
 $\hat{\mu}_j = \frac{1}{n}\sum_{i=1}^n x_{i,j}$, $\hat{\sigma}_j^2 = \frac{1}{n}\sum_{i=1}^n {(x_{i,j}-\hat{\mu}_j)}^2$ 
+\section{SVM}
+\section*{orthogonal distance}
+Let $ w \in \mathbb{R}^d $ and $H = \{ x \in \mathbb{R}^d | \langle w , z \rangle = 0 \} $be a hyperplane. The orthogonal distance of a point z $\in \mathbb{R}^d$ to $H$ can be computed as$ \frac{|\langle w, z \rangle |}{||w||}$. Specifically, if $w$ is a unit vector, the inner product $\langle w, z \rangle$ directly gives the distance of $z$ to $H$.\\
 \section{Dimension Reduction in unsupervised learning}
 \subsection*{Principal Component Analysis (linear)}
 Given $ D \subseteq \mathbb{R}^d, 1 \leq k \leq d, \Sigma = \frac{1}{n}\sum_{i=1}^n x_i x_i ^T, \mu = \frac{1}{n}\sum_i x_i = 0 $ (data is centered)\\
