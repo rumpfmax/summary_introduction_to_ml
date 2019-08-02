@@ -97,19 +97,19 @@ Assumption: Data set generated iid from unknown distribution P: $(x_i , y_i) \si
 True risk: $R(w) = \int P(x,y) (y-w^Tx)^2 dx dy = \mathbb{E}_{x,y}[(y-w^Tx)^2]$\\
 Empirical risk: $\hat{R}_D(w) = \frac{1}{|D|}\sum_{(x,y)\in D} (y-w^Tx)^2$\\
 Generalization error: $|R(w) - \hat{R}_D(w)|$\\
-Uniform convergence: $\underset{w}{\operatorname{sup}}\  |R(w) - \hat{R}_D(w)| \rightarrow 0 \text{ as } |D| \rightarrow 0$\\
-In general, it holds that: $\mathop{\mathbb{E}}_D[\hat{R}_D(\hat{w}_D)] \leq \mathop{\mathbb{E}}_D[R(\hat{w}_D)]$, where $\hat{w}_D =  \underset{w}{\operatorname{argmin}}\ \hat{R}_D(w)$.
+Uniform convergence: $\operatorname{sup}_w\  |R(w) - \hat{R}_D(w)| \rightarrow 0 \text{ as } |D| \rightarrow 0$\\
+In general, it holds that: $\mathop{\mathbb{E}}_D[\hat{R}_D(\hat{w}_D)] \leq \mathop{\mathbb{E}}_D[R(\hat{w}_D)]$, where $\hat{w}_D =  \operatorname{argmin}_w\ \hat{R}_D(w)$.
 
 \subsection*{Cross-validation}
 For each model $m$\\
 For i = 1:k\\
 1. Split data: $D = D_{train}^{(i)} \uplus D_{val}^{(i)}$\\
-2. Train model: $\hat{w}_{i,m} = \underset{w}{\operatorname{argmin}}\ \hat{R}_{train}^{(i)}(w)$\\
+2. Train model: $\hat{w}_{i,m} = \operatorname{argmin}_w\ \hat{R}_{train}^{(i)}(w)$\\
 3. Estimate error: $\hat{R}_m^{(i)} =  \hat{R}_{val}^{(i)}(\hat{w}_{i,m})$\\
-After all iterations, select model:  $\hat{m} = \underset{m}{\operatorname{argmin}}\ \frac{1}{k} \sum_{i=1}^k \hat{R}_m^{(i)}$
+After all iterations, select model:  $\hat{m} =  \operatorname{argmin}_w\ \frac{1}{k} \sum_{i=1}^k \hat{R}_m^{(i)}$
 
 \subsection*{Ridge regression}
-Regularization(corresponds to MAP estimation): $\underset{w}{\operatorname{min}}\ \frac{1}{n} \sum_{i=1}^n (y_i - w^Tx_i)^2 + \lambda ||w||_2^2 = \underset{w}{\operatorname{argmax}}\ P(w)\Pi_i P(y_i | x_i w)$\\
+Regularization(corresponds to MAP estimation): $\operatorname{min}_w\ \frac{1}{n} \sum_{i=1}^n (y_i - w^Tx_i)^2 + \lambda ||w||_2^2 =  \operatorname{argmax}_w\ P(w)\Pi_i P(y_i | x_i w)$\\
 Sparse regression (L1, convex) encourages coefficients to be exactly 0 - automatic feature selection\\
 Closed form solution: $\hat{w} =(X^T X + \lambda I)^{-1} X^T y$\\
 Gradient: $\nabla_w (\frac{1}{n} \sum_{i=1}^n (y_i - w^Tx_i)^2 + \lambda ||w||_2^2) = \nabla_w \hat{R}(w) + 2 \lambda w$
@@ -117,6 +117,30 @@ Gradient: $\nabla_w (\frac{1}{n} \sum_{i=1}^n (y_i - w^Tx_i)^2 + \lambda ||w||_2
 \subsection*{Standardization}
 Goal: each feature: $\mu = 0$, $\sigma^2 = 1$: $\tilde{x}_{i,j} = \frac{(x_{i,j}-\hat{\mu}_j)}{\hat{\sigma}_j}$\\
 $\hat{\mu}_j = \frac{1}{n}\sum_{i=1}^n x_{i,j}$, $\hat{\sigma}_j^2 = \frac{1}{n}\sum_{i=1}^n {(x_{i,j}-\hat{\mu}_j)}^2$ 
+
+\section*{Classification}
+$h(x) = \operatorname{sign}(w^T x)$\\
+\subsection{Losses}
+0/1 loss: $\ell_{0/1}(w; x, y) = [y \neq  \operatorname{sign}(w^T x)]$ \\
+Perceptron loss: $\ell_p(w; x, y) = \max(0, -yw^Tx)$ \\
+Hinge loss: $\ell_H(w; x, y) = \max(0, 1-yw^Tx)$\\
+$\hat{w} = \operatorname{argmin}_w \frac{1}{n} \sum_{i=1}^n \ell_p(w; x_i, y_i)$\\
+$ \nabla_w \ell_p(w, x_i, y_i) = \begin{cases} 0,&\ \text{if $w^T x_i y_i \geq 0$ ($1$ if $\ell_H$)} \\ -y_i x_i&\ \text{else}\end{cases}$\\
+
+\subsection{SGD}
+GD requires sum over all data, slow for large datasets.\\
+1. Choose random initial $w_0 \in \mathbb{R}^d$\\
+2. For $k = 0, 1, \dots$:\\
+(a) Choose $(x, y) \in D$ u.a.r (w/ replacement)\\
+(b) Set $w_{t+1} = w_t - \eta_t \nabla \ell(w_t; x, y)$\\
+SGD converges if $\sum_t \eta_t = \infty$ and $\sum_t \eta_t^2 < \infty$.\\
+Mini-batch: Choose multiple datapoints at random; may converge
+faster.\\
+
+\subsection{Perceptron}
+SGD with $\ell_p$ and $\eta = 1$. If data linearly separable finds separator.
+
+
 \section{Dimension Reduction in unsupervised learning}
 \subsection*{Principal Component Analysis (linear)}
 Given $ D \subseteq \mathbb{R}^d, 1 \leq k \leq d, \Sigma = \frac{1}{n}\sum_{i=1}^n x_i x_i ^T, \mu = \frac{1}{n}\sum_i x_i = 0 $ (data is centered)\\
