@@ -1,0 +1,80 @@
+\section{Kernels}
+\textbf{Kernel trick}: 1. Express problem s.t. it only depends on inner products $x_j^T x_i$ .
+
+2. Replace inner products by kernels.
+
+\textbf{Reformulate problem}: 
+Fundamental insight: Optimal separating hyperplane lives in the span of data: $\hat{w} = \sum_{i=1}^n \alpha_i y_i x_i$
+
+Perceptron example:
+$\hat{w} = \argmin_w \frac{1}{n} \sum_{i=1}^n \max(0, -y_i w^T x_i)$
+
+$\hat{a} = \argmin_\alpha \frac{1}{n} \sum_{i=1}^n \max(0, -y_i \left(\sum_{j=1}^n \alpha_j y_j x_j\right)^T x_i)$
+
+$\hat{a} = \argmin_\alpha \frac{1}{n} \sum_{i=1}^n \max(0,-\sum_{j=1}^n \alpha_j y_i y_j x_j^T x_i)$
+
+\textbf{Replace inner products}: For some feature transform $\phi: x \mapsto \phi(x)$, kernels solve $\phi(x)^T \phi(x')$ \green{efficiently} as $k(x, x')$.
+
+Perceptron example (Training):
+
+\begin{enumerate}
+    \item Initialize $\alpha_1 = \alpha_2 = \dots = \alpha_n = 0$
+    \item For $t = 1, 2, \dots$
+        \begin{enumerate}
+            \item Pick $(x_i, y_i) \in D$ u.a.r.
+            \item Predict $\hat{y} = \sign\left(\sum_{j=1}^n \alpha_j y_j k(x_j, x_i)\right)$
+            \item If $\hat{y} \neq y_i$ set $\alpha_i \Leftarrow \alpha_i + \eta_t$
+        \end{enumerate}
+\end{enumerate}
+
+\textbf{Kernel properties}: $k: X \times X \Rightarrow R$ must be \emph{symmetric}: $k(x, x') = k(x', x)$
+
+Gram matrix $K$ must be p.s.d.\ ($\forall x. x^T K x \geq 0)$ for any $n$, any
+set $\{x_1, \dots, x_n\} \subseteq X$. All p.s.d.\ matrices are some kernel
+and all kernels have Gram matrix.
+\[
+    K = \begin{bmatrix}k(x_1,x_1) & \dots & k(x_1, x_n) \\ \vdots & \ddots &
+    \vdots \\ k(x_n, x_1) & \dots & k(x_n, x_n)\end{bmatrix}
+%    = \begin{bmatrix}\phi(x_1)^T\phi(x_1) & \dots & \phi(x_1)^T\phi(x_n) \\ \vdots & \ddots &
+%    \vdots \\ \phi(x_n)^T\phi(x_1) & \dots & \phi(x_n)^T\phi(x_n)\end{bmatrix}
+\]
+
+For $k_1, k_2$ kernel, $c > 0$ and $f$ polyn. with pos. coef. or exp.
+$k_1 + k_2$, $k_1 \cdot k_2$, $c \cdot k_1$ and $f(k_1(x,x'))$
+are kernels.
+
+\begin{tabular}{ll}
+    Poly. degree $= d$ & $(x^T x')^d$ \\
+    Poly. degree $\leq d$ & $(x^T x' + 1)^d$ \\
+    Gaussian (RBF) & $\exp(-\norm{x-x'}_2^2/(2h^2))$ \\
+    Lapacian & $\exp(-\norm{x-x'}_1/h)$ \\
+\end{tabular}
+
+Note: $h > 0$ is bandwidth, $h \rightarrow 0$ overfits.
+
+\textbf{k-NN}: $y = \sign\left(\sum_{i=1}^n y_i [\text{$x_i$ among k-NN of $x$}]\right)$
+
+\green{No training}, but \red{depends on all data}.
+
+\centerline{$y = \sign\left(\sum_{i=1}^n y_i \alpha_i k(x_i, x)\right)$}
+
+Can use kernel as \emph{similarity function}: \green{Improved performance}, depends only on
+\green{wrongly classified data}, can capture \green{global trends}, but \red{requires training}.
+
+\textbf{Parametric vs. nonparametric learning}: \emph{Parametric} have finite set of parameters (regression, perceptron), while
+\emph{nonparametric} increase complexity with size of data (kernelized perceptron, k-NN).
+
+Can kernelize other tasks, such as SVM. Let $k_i =
+\begin{bmatrix}y_1 k(x_1,x_i) & \dots & y_n k(x_n, x_i) \end{bmatrix}$:
+
+$\argmin_\alpha \frac{1}{n} \sum_{i=1}^n \max\{0, 1-y_i\alpha^Tk_i\} + \lambda \alpha^TD_y K D_y \alpha$
+
+Lin. reg. (training): $\hat{\alpha} = \argmin_\alpha \frac{1}{n} \norm{\alpha^TK-y}_2^2 + \lambda \alpha^T K \alpha$
+
+Closed form sol: $\hat{\alpha} = (K + n \lambda I)^{-1} y$
+
+Lin. reg. (prediction): $\hat{y} = \sum_{i=1}^n \hat{\alpha}_i k(x_i, x)$
+
+
+Est. kernel parameters via CV. Choosing kernels requires \red{domain
+knowledge}. Deal w/ overfit by regularization.

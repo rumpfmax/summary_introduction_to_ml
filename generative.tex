@@ -1,0 +1,32 @@
+\section{Generative Modeling}
+
+Estimate \emph{joint distribution} $P(X,Y)$ instead of $P(Y \mid X)$. Cond.\
+distr.\ can be derived from joint:  1. Estimate $P(Y)$, 2. Estimate $P(x|y)$ for each $y$, 3. Use Bayes‘ rule: $P(y|x) = P(y) P(x|y)/P(x)$ where $P(x) = \sum_{y'} P(x, y')$.  For $c=2$ \emph{discriminant function} $f(x)
+= \log\frac{P(Y = 1 \mid x)}{P(Y = -1 \mid x)}$, which is $+1$ if $P(Y = 1 \mid x) > 0.5$.
+
+\textbf{Naive Bayes}: Model class $y$ as categorical, and features \red{conditionally
+independent} given $y$, e.g.\ Gaussian NB, assumes $P(x_i | y) =
+\mathcal{N}(x_i | \mu_{y,i}, \sigma^2_{y,i})$. Produces linear classifier, equiv. to log. reg. if assumptions are met. $f(x) = w^T x + w_0$
+where $w_0 = \log\frac{p_+}{1 - p_+} + \sum_{i=1}^d \frac{\mu_{-,i}^2 -
+\mu_{+,i}^2}{2 \sigma_i^2}$ and $w_i = \frac{\mu_{+,i} - \mu{-,i}}{\sigma_i^2}$. Due to conditional independence assumption, predictions can become \red{overconfident}. \green{\# parameters = $O(c d)$}, Complexity (memory + inference) \green{linear in d}
+
+\textbf{Categorical Naive Bayes}: $P(X_i =c|Y =y)=\theta^{(i)}_{c|y}$. MLE prior: $\hat{p}_y = \frac{\# y}{n}$, MLE feat.\ distr.: $\theta^{(i)}_{c|y} = \frac{\text{Count}(X_i = c, Y = y)}{\# y}$. \red{Requires exponentially (in d) many parameters}, \red{Fantastic way to overfit}.
+
+\textbf{Gaussian Bayes}: $P(x|y) = \mathcal{N}(x; \mu_y, \Sigma_y)$. MLE prior: $\hat{p}_y = \frac{\# y}{n}$, MLE feat.\ distr.: $\hat{\mu}_k = \frac{1}{\# y} \sum_{i: y_i = y} x_i$ and $\hat{\Sigma}_y = \frac{1}{\# y}
+\sum_{i: y_i = y} (x_i - \hat{\mu}_y) (x_i - \hat{\mu}_y)^T$. Discriminant $f(x)$:
+
+$\log\frac{p}{1-p} + \frac{1}{2}\left[\log\frac{|\hat{\Sigma}_-|}{|\hat{\Sigma}_+|} + \left( (x - \hat{\mu}_-)^T \hat{\Sigma}_-^{-1} (x-\hat{\mu}_-) \right) - \left( (x - \hat{\mu}_+)^T \hat{\Sigma}_+^{-1} (x-\hat{\mu}_+) \right) \right]$. \green{Captures correlations among features}, \green{avoids overconfidence}, \red{\# parameters = $O(c d^2)$}, complexity \red{ quadratic in d}.
+
+\textbf{Fischer's LDA}: Assume $p = 0.5$ and $\hat{\Sigma}- = \hat{\Sigma}+ = \hat{\Sigma}$. Then $f(x) =
+x^T \hat{\Sigma}^{-1} (\hat{\mu}_+ - \hat{\mu}_-)+ \frac{1}{2} \left( \hat{\mu}_-^T \hat{\Sigma}^{-1} \hat{\mu}_- -
+\hat{\mu}_+^T \hat{\Sigma}^{-1} \hat{\mu}_+\right)$.
+
+Produces linear classifier, equiv. to log. reg. if assumptions are met. LDA can be viewed as a projection to a 1-dim. subspace that maximizes ratio of between-class and within-class variances. In constrast, PCA (k=1) maximizes the variance of the resulting 1-dim. projection. Generative model, can be used to \green{detect outliers}, not very robust against violation of \red{normality of X assumption}.
+
+Can regularize: $\Beta(\theta,\alpha_+,\alpha_-)$ models likelihood of $\theta$
+given $\alpha_+$ weight for $y=1$ and $\alpha_-$ weight for $y=-1$.
+
+\textbf{Conjugate distr.}: Posterior is same family as prior. Ex.: $\Beta(\theta,
+\alpha_+, \alpha_-)$ and $\Beta(\theta, n_+ + \alpha_+, n_- + \alpha_-)$. MAP
+estimate: $\hat{\theta} = \frac{\alpha_+ + n_+ - 1}{\alpha_+ + n_+ + \alpha_- +
+n_- - 2}$.

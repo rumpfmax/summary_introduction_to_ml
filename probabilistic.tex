@@ -1,0 +1,47 @@
+\section{Probabilistic modeling}
+
+\textbf{Bayes optimal predictor}: $h^*(x) = \E[Y \mid X = x]$, \red{unattainable in pr.}
+Can try to estimate conditional distr.\ $\hat{P}(Y\mid X)$.
+
+\emph{Parametric estimation}: Have $\hat{P}(Y \mid X, \theta)$, MLE:
+
+$\theta^* = \argmax_\theta \hat{P}(Y \mid X, \theta) = \argmin_\theta -\sum_{i=1}^n \log\hat{P}(y_i \mid x_i, \theta)$
+
+Ex.: Gaussian noise, lin. reg.: $y_i \sim \mathcal{N}(w^T x, \sigma^2)$. Then MLE:
+
+$\argmin_\theta = \frac{n}{2} \log(2 \pi \sigma^2) \sum_{i=1}^n \frac{(y_i - w^T x_i)^2}{2 \sigma^2}$
+
+and MLE equivalent to LSQ estimation. In general, MLE with Gaussian noise with constant variance is
+\green{equivalent} to LSQ sol.
+
+\textbf{Bias Variance Tradeoff}: Prediction error = $\text{Bias}^2$ + Variance + Noise.
+
+Bias: Excess risk of best model considered compared to minimal achievable risk knowing $P(X,Y)$ (i.e., given infinite data).
+
+Variance: Risk incurred due to estimating model from limited data.
+
+Noise: Risk incurred by optimal model (i.e., irreducible error).
+
+\green{Trade bias and variance via model selection / regularization}
+
+\textbf{Maximum A Posteriori estimation}: Placing assumptions on distribution of
+parameter. For Gaussian noise and Gaussian prior: MAP = Ridge regression.
+
+Regularized estimation can often be understood as MAP inference: 
+
+$\argmin_w \sum_{i=1}^n \ell(w^T x_i; x_i, y_i) + C(w) = $
+
+$\argmax_w \prod_i P(y_i | x_i, w) P(w) = \argmax_w P(w|D)$ where $C(w) = - \log P(w)$ and $\ell(w^T x_i; x_i, y_i) = - \log P(y_i | x_i, w)$.
+
+\textbf{Bayes optimal classifier}: $h^*(x) = \argmax_y P(Y = y \mid X = x)$
+
+\textbf{Logistic regression}: $P(Y=y|x) = \frac{1}{1+\exp(-y w^T x)}$. Replaces Gaussian noise assumption with Bernoulli noise: $P(y|x,w)=\text{Ber}(y;\sigma(w^T x)).$
+MLE:
+$\hat{R}(w) = \sum_{i=1}^n log(1 + exp(-y_iw^Tx_i))$, is \green{convex}
+and $\nabla_w \ell_w = \frac{1}{1+exp(-yw^Tx)} exp(-yw^Tx) (-yx)$, and
+$exp(-yw^Tx) = 1$ if misclassified. Thus $\nabla_w \ell_w =
+\frac{-yx}{1+exp(yw^Tx)}$. With L2 regularizer, take step in direction
+$w\blue{(1-2\lambda\eta_t)} - \eta_t \nabla_w \ell_w(y, x)$. Nonlinear classification via
+kernels: $\hat{\alpha} = \argmin_{\alpha} \sum_{i=1}^n \log (1+\exp(-y_i \alpha^T K_i)) + \lambda \alpha^T K \alpha$ and $\hat{P}(y | x, \hat{\alpha}) = \frac{1}{1+\exp(-y \sum_{j=1}^n \alpha_j k(x_j, x))}$ with $w = \sum_i \alpha_i x_i$. Multi-class: $P(Y = i | x,w_1,...,w_c) = \frac{\exp(w_i^T x)}{\sum_{j=1}^c \exp(w_j^T x)}$
+
+\green{Can obtain class probablities}, but \red{dense solutions}

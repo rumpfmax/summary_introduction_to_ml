@@ -1,0 +1,42 @@
+\section{Generalized Mixture Models}
+
+Setting: Labels potentially unknown, want to cluster data.
+
+Model $P(x, \theta)$ as \emph{convex combination} of Gaussian distributions:
+$\sum_{i=1}^c w_i \mathcal{N}(x; \mu_i, \Sigma_i)$ with $w_i > 0$ and $\sum_i w_i =
+1$.
+
+$(\mu^*, \Sigma^*, w^*) = \argmin - \sum_{i=1}^n \log \sum_{j=1}^k w_j \mathcal{N}(x_i; \mu_j,
+\Sigma_j)$. Constraints ($\Sigma$ p.s.d.) \red{hard to maintain} in SGD. Fitting a GMM = Training a GBC without labels.
+
+\textbf{Hard-EM}: E-step: Predict most likely class for all $x_i$: $z_i^{(t)} = \argmax_z P(z \mid
+x_i, \theta^{(t-1)}) = \argmax_z P(z | \theta^{(t-1)}) P(x_i | z, \theta^{(t-1)}) $ with $\theta^{(t)} = [w_{1:c}^{(t)}, \mu_{1:c}^{(t)}, \Sigma_{1:c}^{(t)}]$. M-step: Compute $\theta^{(t)}$ as MLE as for the Gaussian Bayes classifier:
+$\theta^{(t)} = \argmax_\theta P(D^{(t)} \mid \theta)$.
+
+\red{Too much information} extracted from each label, \red{overlapping} clusters
+not detected, \red{fixed label} when model uncertain. k-Means Algorithm is equiv to Hard-EM if $w_j = 1/k$ and $\Sigma_j = I \cdot \sigma^2$.
+
+\textbf{Soft-EM}: Let $\gamma_j(x)$ be prob.\ that $x$ in cluster $j$:
+
+$\gamma_j(x) = P(Z = j \mid x, \Sigma, \mu, w) = \frac{w_j P(x \mid \Sigma_j, \mu_j
+)}{\sum_\ell w_\ell P(x \mid \Sigma_\ell, \mu_\ell)}$
+
+E-Step: Calculate prob $\gamma_j(x_i)$ for all $i, j$ based on $\mu^{(t-1)}$,
+$\Sigma^{(t-1)}$ and $w^{(t-1)}$.
+
+M-Step: Adjust parameters: $w_j^{(t)} = \frac{1}{n} \sum_{i=1}^n \gamma_j^{(t)}(x_i)$,
+
+$\mu_j^{(t)} = \frac{\sum_{i=1}^n \gamma_j^{(t)}(x_i) x_i}{\sum_{i=1}^n  \gamma_j^{(t)}(x_i)}$ and
+$\Sigma_j^{(t)} = \frac{\sum_{i=1}^n  \gamma_j^{(t)}(x_i) (x_i - \mu^{(t)}_j) (x_i -
+\mu_j^{(t)})^T}{\sum_{i=1}^n \gamma_j^{(t)}(x_i)}$.
+
+\red{Initialization sensitive}, \red{nonconvex objective}. Init.\ $w$ with uniform distribution, $\mu$ by k-means++ and $\Sigma$ as spherical (according to empirical variance in data). Choose $k$ \green{via CV}.
+
+Avoid \red{degeneracy} by \green{adding term $\nu^2 I$} to $\Sigma_j^{(t)}
+\rightarrow$ Wishart-prior.
+
+\textbf{Semi-supervised learning}: For points with label $y_i$: $\gamma_j^{(t)}(x_i) = [j = y_i]$
+
+\textbf{GANs}: Objective:
+
+$\min_{w_G} \max_{w_D} \mathbb{E}_{x \sim \text{Data}} \log D(x; w_D) + \mathbb{E}_{x \sim \mathcal{N}} \log(1 - D(G(z; w_G); w_D))$, \red{Mode Collapse}: generator produces less diverse samples than distribution, \red{Data memorization}, Simultaneous training $\rightarrow$ \red{oscillations}, \red{Cannot compute likelihood on holdout set}.

@@ -1,0 +1,24 @@
+\section{General}
+P-Norm:$||x||_p = (\Sigma_{i=1}^n |x_i|^p)^{\frac{1}{p}}$
+
+Frobenious Norm:$||A||_F = \sqrt{\Sigma_{i,j} a_{ij}^2}$
+
+Derivation rules: Chain rule: $D(f(g(x))) = Df(g(x))*Dg(x)$
+
+positive definiteness: $A$ is p.s.d., then A is a real symmetric matrix and $x^TAx \geq 0$ for all x
+
+Joint distribution: X, Y are RVs $F_{X,Y}(x,y) = \mathbb{P}(X \leq x, Y\leq y)$
+
+Joint density:$ f_{X,Y}(x, y) = \frac{\delta^2 F}{\delta x \delta y}(x, y)$
+
+Conditional Probability: $\mathbb{P}(A|B) = \frac{\mathbb{P}(A \cap B)}{\mathbb{P}(B)}$
+
+Law of total probability: $\mathbb{P}(B) = \Sigma_{i=1}^n \mathbb{P}(B|A_i)\mathbb{P}(A_i)$
+
+Bayes rule: $\mathbb{P}(A|B) = \mathbb{P}(B|A)\frac{\mathbb{P}(A)}{\mathbb{P}(B)}$
+
+Variance: $Var(X) = \mathbb{E}[(X - \mathbb{E}[X])^2] = \mathbb{E}[X^2] - \mathbb{E}[X]^2 \geq 0$
+
+Convexity: A twice differentiable function $f: \mathbb{R}^d \rightarrow \mathbb{R}$ is convex iff for any $x \in \mathbb{R}^d$ its Hessian is p.s.d
+
+Convex functions are closed under addition
