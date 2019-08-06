@@ -14,16 +14,15 @@
 \usepackage[english]{babel}
 \usepackage{blindtext}
 
+\usepackage{ragged2e}
+
 \usepackage{tgtermes}
-%\renewcommand{\familydefault}{\sfdefault}
 
 \usepackage{float}
 
 \usepackage{titlesec}
-\titlespacing\section{0pt}{0pt}{0pt plus0pt}
+\titlespacing\section{0pt}{0pt}{0pt plus 0pt}
 \titleformat*{\section}{\large\bfseries}
-\titlespacing\subsection{0pt}{2pt}{0pt plus 1pt}
-\titleformat*{\subsection}{\normalsize\bfseries}
 
 \usepackage{xcolor}
 
@@ -69,6 +68,7 @@
 \setlength{\columnseprule}{0.4pt}
 
 \setlength{\parskip}{-1.5pt}
+
 \setlength{\topskip}{0pt}
 \setlength{\abovedisplayskip}{4pt}
 \setlength{\belowdisplayskip}{2pt}
@@ -76,6 +76,7 @@
 \setlength{\belowdisplayshortskip}{0pt}
 
 \begin{multicols*}{4}
+\RaggedRight
     \input{general}
     \input{regression}
     \input{classification}

@@ -1,46 +1,44 @@
 \section{Unsupervised Learning}
 
-\textbf{k-Means clust.}: Represent cluster as center, assign point $x_i \in \Rd$ to nearest center $\mu_j
-\in \Rd$. Squared loss (below) \red{nonconvex}.
-
-$\hat{R}(\mu) = \sum_{i=1}^n \min_{j\in [k]} \norm{x_i - \mu_j}_2^2$
+\textbf{k-Means clust.}: Assign point $x_i \in \Rd$ to nearest center $\mu_j
+\in \Rd$. $\hat{R}(\mu) = \sum_{i=1}^n \min_{j\in [k]} \norm{x_i - \mu_j}_2^2$, \red{nonconvex}.
 
 Lloyd: Initialize $\mu^{(0)}$. Then assign $x_i$ to closest center $z_i^{(t)} =
 \argmin_j \lVert x_i - \mu_j^{(t-1)}\rVert_2^2$. Then update mean: $\mu_j^{(t)} =
 \frac{1}{|i: z_i^{(t)}=j |} \sum_{i: z_i^{(t)}=j} x_j$. $\mathcal{O}(nkd)$
-per iteration, converges \red{pot. slowly} but \green{monotonically} to
-\red{local optimum} $\rightarrow$ \green{Multiple iter.}
+per it., converg. \red{pot. slowly} but \green{monotonically} to
+\red{local optimum} $\rightarrow$ \green{Mult. iter.}
 
 k-Means++: Let $\mu^{(0)} = \text{$x$ u.a.r.\ from $X$}$. Assign centers
-$2\dots k$ randomly, prop.\ to sq.\ dist.\ to closest sel.\ cent. Expected cost
-within \green{$\mathcal{O}(\log k)$} of optimum.
+$2\dots k$ randomly, prop.\ to sq.\ dist.\ to closest sel.\ cent. $\mathbb{E}[\text{cost}]$ is \green{$\mathcal{O}(\log k)$} of opt.
 
 $\Pr[\mu_j=x_i]=\frac{1}{Z} \min_{k\in [j-1]} \norm{\mu_k-x_i}_2^2$
 
 Choosing $k$ \red{difficult}. Heuristic: When $k+1$ yields
 \emph{diminishing returns}, or \emph{regularization} with $\lambda k$.
-Only models circular clusters $\rightarrow$ use kernels.
+Only models circ. clust.: use kernels.
 
 \textbf{Dimension Reduction}: Embed $\{x_1,\dots,x_n\}$, $x_i \in \Rd$ in $\R^k$ where $k < d$.
 
-\textbf{PCA}: \emph{Center data} $\mu = \frac{1}{n} \sum_{i=1}^n x_i = 0$ and construct
-\emph{empirical cov.\ matrix}: $\Sigma = \frac{1}{n} \sum_{i=1}^n x_i x_i^T$.
+\textbf{PCA}: \emph{Center data} $\mu = \frac{1}{n} \sum_{i=1}^n x_i = 0$ and 
+
+construct \emph{emp. cov.\ matrix}: $\Sigma = \frac{1}{n} \sum_{i=1}^n x_i x_i^T$.
 PCA problem: $(W, z_1,\dots,z_n) = \argmin_{W,z} \sum_{i=1}^n \norm{W z_i - x_i}_2^2$
-where $W$ orthogonal, $z_i \in \R^k$ has sol.\ $z_i = W^T x_i$. The solution for W is given by the k principal eigenvectors of $\Sigma$. $W = (v_1 | ... | v_k)$ where $\Sigma = \sum_{i=1}^d \lambda_i v_i v_i^T$ with $\lambda_1 \geq ... \geq \lambda_d \geq 0$. Can apply to any
-matrix $X = U S V^T$, first $k$ components of $V$ are first $k$ principal
-components. Choose $k$ by CV for feature ind., else s.t.\ variance is explained
-(see k-Means). Solve nonlinear PCA via kernels.
+where $W$ orthogonal, $z_i \in \R^k$ has sol.\ $z_i = W^T x_i$. Sol. for W is k principal eigenvectors of $\Sigma$. $W = (v_1 | ... | v_k)$ where $\Sigma = \sum_{i=1}^d \lambda_i v_i v_i^T$ with $\lambda_1 \geq ... \geq \lambda_d \geq 0$. Can apply to any
+matrix $X = U S V^T$, first $k$ columns of $V$ are first $k$ principal
+components. Choose $k$ by CV for feature ind. or s.t. var is explained
+(see k-Means).
 
-\textbf{Kernel PCA}: $w = \sum_{j=1}^n \alpha_j \phi(x_j)$, $K = \sum_{i=1}^n \lambda_i v_i v_i^T$
+\textbf{Kernel PCA}: $w = \sum_{j=1}^n \alpha_j \phi(x_j)$,
 
-$\argmax_{||w||_2 = 1} \sum_{i=1}^n (w^T \phi(x_i))^2 =$
+$K = \sum_{i=1}^n \lambda_i v_i v_i^T$, 
 
-$ \argmax_{\alpha_T K \alpha = 1} \alpha^T K^T K \alpha$, Solution: $\alpha^{(i)} = v_i/(\sqrt{\lambda_i})$
+$\argmax_{||w||_2 = 1} \sum_{i=1}^n (w^T \phi(x_i))^2 = \argmax_{\alpha_T K \alpha = 1} \alpha^T K^T K \alpha$, $\alpha^{(i)} = v_i/\sqrt{\lambda_i}$
 
 New point: $z_i = w^{(i)T}x = \sum_{j=1}^n \alpha_j^{(i)} k(x, x_j)$
 
 Centering a kernel: $K' = K - KE - EK + EKE$ where $E = \frac{1}{n}[1,...,1][1,...,1]^T$.
 
-Complexity \red{grows with the number of data points.}
+Complexity \red{grows with the \# of data points.}
 
-\textbf{Autoencoder}: NN where hidden layers usually smaller ($k$) than in- and output ($d$). Try to learn identity function. Compression from input to smallest HL, Decompression from smallest HL to output. $f(x; \theta) = f_{dec}(f_{enc}(x; \theta_1);\theta_2)$. If $\varphi(z) = z$ then autoencoder is equivalent to PCA.
+\textbf{Autoencoder}: NN where hidden layers usually smaller ($k$) than in- and output ($d$). Try to learn identity function. Compr. from input to smallest HL, Decompr. from smallest HL to output. $f(x; \theta) = f_{dec}(f_{enc}(x; \theta_1);\theta_2)$. If $\varphi(z) = z$ then autoencoder is equivalent to PCA.

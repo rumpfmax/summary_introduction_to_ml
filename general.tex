@@ -3,22 +3,30 @@ P-Norm:$||x||_p = (\Sigma_{i=1}^n |x_i|^p)^{\frac{1}{p}}$
 
 Frobenious Norm:$||A||_F = \sqrt{\Sigma_{i,j} a_{ij}^2}$
 
-Derivation rules: Chain rule: $D(f(g(x))) = Df(g(x))*Dg(x)$
+Chain rule: $D(f(g(x))) = Df(g(x))*Dg(x)$
 
-positive definiteness: $A$ is p.s.d., then A is a real symmetric matrix and $x^TAx \geq 0$ for all x
+Positive (semi-)definiteness: $A \in \R^{n \times n}$ is p.(s.)d., then $A$ is a real, symmetric matrix and $\forall x \in \R^n . x^TAx > (\geq) 0 $.
 
-Joint distribution: X, Y are RVs $F_{X,Y}(x,y) = \mathbb{P}(X \leq x, Y\leq y)$
+Joint distribution: X, Y are RVs $F_{X,Y}(x,y) = P(X \leq x, Y\leq y)$
 
 Joint density:$ f_{X,Y}(x, y) = \frac{\delta^2 F}{\delta x \delta y}(x, y)$
 
-Conditional Probability: $\mathbb{P}(A|B) = \frac{\mathbb{P}(A \cap B)}{\mathbb{P}(B)}$
+Conditional Probability: $P(A|B) = \frac{P(A \cap B)}{P(B)}$
 
-Law of total probability: $\mathbb{P}(B) = \Sigma_{i=1}^n \mathbb{P}(B|A_i)\mathbb{P}(A_i)$
+Total probability:$P(B) = \Sigma_{i=1}^n P(B|A_i)P(A_i)$
 
-Bayes rule: $\mathbb{P}(A|B) = \mathbb{P}(B|A)\frac{\mathbb{P}(A)}{\mathbb{P}(B)}$
+Bayes rule: $P(A|B) = P(B|A)\frac{P(A)}{P(B)}$
 
-Variance: $Var(X) = \mathbb{E}[(X - \mathbb{E}[X])^2] = \mathbb{E}[X^2] - \mathbb{E}[X]^2 \geq 0$
+Variance: $\text{Var}(X) = \mathbb{E}[(X - \mathbb{E}[X])^2] = \mathbb{E}[X^2] - \mathbb{E}[X]^2 \geq 0$
 
-Convexity: A twice differentiable function $f: \mathbb{R}^d \rightarrow \mathbb{R}$ is convex iff for any $x \in \mathbb{R}^d$ its Hessian is p.s.d
+Gaussian and Multivariate (2D) Gaussian: 
 
-Convex functions are closed under addition
+$f(x) = \frac{1}{\sqrt{2\pi\sigma^2}} exp(-\frac{(x-\mu)^2}{2\sigma^2})$,
+
+$f(x) = \frac{1}{2\pi \sqrt{|\Sigma|}} e^{- \frac{1}{2} (x-\mu)^T \Sigma^{-1} (x-\mu)}$.
+
+Convex function: $f : \mathbb{R}^d \rightarrow \mathbb{R} \text{ is convex} \Leftrightarrow x_1,x_2 \in \mathbb{R}^d, \lambda \in [0,1]: f(\lambda x_1 + (1-\lambda) x_2) \leq \lambda f(x_1) + (1-\lambda) f(x_2)$.
+
+A twice differentiable function $f: \mathbb{R}^d \rightarrow \mathbb{R}$ is convex iff $\forall x \in \R^d$ its Hessian is p.s.d.
+
+If $w_i \geq 0$ and $f_i$ all conv., then $\sum_i w_i f_i$ conv.

@@ -1,20 +1,7 @@
 \section{Decision Theory}
 
 Have $P(y\mid x)$, actions $\mathcal{A}$ and cost $C : \mathcal{Y} \times
-\mathcal{A} \rightarrow R$. Min.\ Exp.\ cost: $a^* = \argmin_a \E_y[C(y, a)\mid
-x]$
+\mathcal{A} \rightarrow R$. Min.\ Exp.\ cost: $a^* = \argmin_a $
 
-Asymmetric costs: Assume $A = \{-1,+1\}$, $c_{FP}, c_{FN} > 0$. Let $\hat{P}(y
-\mid x) = p$, then $\E_y[C(y, +1)] = (1-p) c_{FP}$ and $\E_y[C(y,-1)] = p
-c_{FN}$. Predict $+1$ when $p > \frac{c_{FP}}{c_{FP}+c_{FN}}$.
-
-Uncertainty sampling: Ask user to label the example that we are most uncertain about: $i_t \in \argmin_i | 0.5 - \hat{P} (Y_i|x_i)|$. Active learning \red{violates i.i.d. assumption}.
-
-
-\textbf{MAP summary}:  1. Choose likelihood function $\rightarrow$ loss function
-
-2. Choose prior $\rightarrow$ regularizer
-
-3. Optimize for MAP parameters, choose hyperparameters through cross-validation
-
-4. Make predictions via Bayesian Decision Theory
+$\E_y[C(y, a)\mid x]$. Asymmetric costs: Assume $A = \{-1,+1\}$, $c_{FP}, c_{FN} > 0$. Let $\hat{P}(y
+\mid x) = p$, then $\E_y[C(y, +1)] = (1-p) c_{FP}$ and $\E_y[C(y,-1)] = p c_{FN}$. Predict $+1$ when $p > \frac{c_{FP}}{c_{FP}+c_{FN}}$. Uncertainty sampling: Ask user to label example we most uncertain about: $i_t \in \argmin_i | 0.5 - \hat{P} (Y_i|x_i)|$. Active learning \red{violates i.i.d. assumption}.

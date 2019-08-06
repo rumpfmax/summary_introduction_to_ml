@@ -1,15 +1,15 @@
 \section{Classification}
-$h(x) = \operatorname{sign}(w^T x)$
+0/1 loss: $\ell_{0/1}(w; x, y) = [y \neq  \operatorname{sign}(w^T x)]$
 
-\textbf{Losses}: 0/1 loss: $\ell_{0/1}(w; x, y) = [y \neq  \operatorname{sign}(w^T x)]$
-
-Perceptron loss: $\ell_p(w; x, y) = \max(0, -yw^Tx)$
+Perc. loss: $\ell_p(w; x, y) = \max(0, -yw^Tx)$
 
 Hinge loss: $\ell_H(w; x, y) = \max(0, 1-yw^Tx)$
 
-$ \nabla_w \ell_p(w, x_i, y_i) = \begin{cases} 0,&\ \text{if $w^T x_i y_i \geq 0$ ($1$ if $\ell_H$)} \\ -y_i x_i&\ \text{else}\end{cases}$
+$ \nabla_w \ell_p = \begin{cases} 0,&\ \text{if $w^T x_i y_i \geq 0$ ($1$ if $\ell_H$)} \\ -y_i x_i&\ \text{else}\end{cases}$
 
-\textbf{SGD}: GD requires sum over all data, slow for large datasets.
+\textbf{Fisher consistency}: A surrogate loss $\psi : Y \times S \rightarrow \mathbb{R}$, is said to be consistent to the loss $L : Y \times S \rightarrow \mathbb{R}$, if every minimizer f of surrogate risk function $R_{\psi}(f)$ is also a minimizer of risk function $R_L (f)$. E.g. hinge and logistic losses are consistent with 0/1 loss.
+
+\textbf{SGD}: GD requires sum over all data $\rightarrow$ slow.
 
 1. Choose random initial $w_0 \in \Rd$
 
@@ -21,8 +21,8 @@ $ \nabla_w \ell_p(w, x_i, y_i) = \begin{cases} 0,&\ \text{if $w^T x_i y_i \geq 0
 
 SGD converges if $\sum_t \eta_t = \infty$ and $\sum_t \eta_t^2 < \infty$.
 
-Mini-batch: Choose multiple datapoints at random; may converge
-faster.
+Mini-batch: Choose multiple datapoints at random; \green{may converge
+faster}.
 
 \textbf{Perceptron}: SGD with $\ell_p$ and $\eta = 1$.
 
@@ -38,5 +38,3 @@ $w_{t+1} = w_t (1 - 2 \eta_t \lambda) + \eta_t x_i y_i [y_i w_T x_i < 1]$
 
 Often $\eta_t = \frac{1}{\lambda t}$. \green{Works on non-linearly separable data}, finds best
 separator w.r.t.\ $\ell_H$.
-
-\section{???orthogonal distance}: Let $ w \in \mathbb{R}^d $ and $H = \{ x \in \mathbb{R}^d | \langle w , z \rangle = 0 \} $be a hyperplane. The orthogonal distance of a point z $\in \mathbb{R}^d$ to $H$ can be computed as$ \frac{|\langle w, z \rangle |}{||w||}$. Specifically, if $w$ is a unit vector, the inner product $\langle w, z \rangle$ directly gives the distance of $z$ to $H$.

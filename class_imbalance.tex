@@ -3,12 +3,12 @@
 Downsample \red{loses data} but \green{fast}, upsample \red{random pertubation maybe unsafe}.
 Use cost-sensitive metrics controlling tradeoff:
 
-$\ell_{CS} = c_y \ell(w; x, y)$
+$\ell_{CS} = c_y \ell(w; x, y)$.
 
 \begin{tabular}{|l|l|l|l|l|}
 \hline
                                  & \multicolumn{4}{l|}{True label}                                      \\ \hline
-\multirow{4}{*}{\rotatebox[origin=c]{90}{Pred. lab.}} &                       & Positive & Negative & $\Sigma$ \\ \cline{2-5} 
+\multirow{4}{*}{\rotatebox[origin=c]{90}{Predict.}} &                       & Positive & Negative & $\Sigma$ \\ \cline{2-5} 
                                  & Positive              & TP       & FP       & $p_{+}$                 \\ \cline{2-5} 
                                  & Negative              & FN       & TN       & $p_{-}$                 \\ \cline{2-5} 
                                  & $\Sigma$ & $n_{+}$     & $n_{-}$     &                      \\ \hline
@@ -16,20 +16,13 @@ $\ell_{CS} = c_y \ell(w; x, y)$
 
 Accuracy \red{bad} metric for imbalanced data.
 
-\begin{tabular}{rlrl}
-    Accuracy & $\frac{TP+TN}{TP+TN+FP+FN}$ & Precision & $\frac{TP}{TP+FP}$ \\
-    TPR, Recall & $\frac{TP}{TP+FN}$ & F1 score & $\frac{2TP}{2TP+FP+FN}$ \\
-    FPR & $\frac{FP}{TN+FP}$ & & \\
-\end{tabular}
-\vspace{0.05ex}
+Accuracy: $\frac{TP+TN}{TP+TN+FP+FN}$, 
 
-\textbf{Precision Recall Curve}: Precision (y-axis) vs. Recall (x-axis).
+Precision: $\frac{TP}{TP+FP}$, TPR, Recall: $\frac{TP}{TP+FN}$,  FPR: $\frac{FP}{TN+FP}$, F1 score: $\frac{2TP}{2TP+FP+FN}$
 
-Precision = 1 and Recall = 1 is optimal. Area under curve (AUC) can be used for comparison of algos.
+\textbf{Precision Recall Curve}: Precision (y-axis) vs. Recall (x-axis). Precision = 1 and Recall = 1 is optimal. Area under curve (AUC) can be used for comparison of algos.
 
-\textbf{Receiver Operator Characteristic (ROC) Curve}: TPR (y-axis) vs. FPR (x-axis).
-
-Random guessing achieves TPR = FPR line. TPR > FPR is better than random guessing. TPR = 1 and FPR = 0 is optimal. Area under curve (AUC) can be used for comparison of algos.
+\textbf{Receiver Operator Characteristic (ROC) Curve}: TPR (y-axis) vs. FPR (x-axis). Random guessing achieves TPR = FPR line. TPR > FPR is better than random guessing. TPR = 1 and FPR = 0 is optimal. Area under curve (AUC) can be used for comparison of algos.
 
 Theorem: Alg 1 dominates Alg 2 in terms of ROC curve $\Leftrightarrow$ Alg 1 dominates Alg 2 in terms of Precision Recall curve.
 
@@ -38,9 +31,8 @@ Theorem: Alg 1 dominates Alg 2 in terms of ROC curve $\Leftrightarrow$ Alg 1 dom
 
 \textbf{One-vs-one} \red{$c (c-1) / 2$ classifiers}, voting scheme with highest number of positive prediction wins: \green{no confidence needed}.
 
-Ideally $\mathcal{O}(\log c)$ classifiers, theoretical optimum.
+Ideally $\mathcal{O}(\log c)$ classifiers, theor. optimum.
 
-\textbf{Multi-class SVM}: Maintains $c$ weight vectors, want $w^{(y)T} x \geq
-\max\{w^{(i)T}x\}+1$ for correct label $y$.
+\textbf{Multi-class SVM}: $c$ weight vectors, $w^{(y)T} x \geq \max\{w^{(i)T}x\}+1$ for correct label $y$.
 
 $\ell_{MC-H}(w^{(1)},...,w^{(c)}; x, y) = \max(0, 1 + \max_{j \neq y} w^{(j)T} x - w^{(y)T} x)$ 

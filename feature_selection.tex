@@ -1,7 +1,5 @@
 \section{Feature selection}
-\textbf{Naive}: try all subsets, and pick best (via crossvalidation)
-
-\textbf{Greedy}: Greedily add (or remove) features to maximize cross-validated prediction accuracy w.r.t.\ cost $c: V \Rightarrow \R$ of using features in subset of $V$. Forward (start with empty set) is faster, but backward is more resilient to "dependent" features. Applies to \green{any method}, but \red{slow} b/c trains many models and can be \red{suboptimal}.
+\textbf{Greedy}: Greedily add (or remove) features to maximize cross-validated prediction accuracy w.r.t.\ cost $c: V \Rightarrow \R$ of using features in subset of $V$. Forward (start with empty set) \green{is faster}, but backward is more \green{resilient to "dependent" features}. Applies to \green{any method}, but \red{slow} b/c trains many models and can be \red{suboptimal}.
 
 \textbf{L1-Regularization}: regularize loss with $\norm{w}_1$, automatic feature
 selection. Can be used for regression (Lasso), classification (L1-SVM) by replacing $||w||_2^2$ with $||w||_1$. Only works for \red{linear} models, but is \green{fast}.

@@ -1,30 +1,23 @@
 \section{Neural Networks}
 
-Parametrized feature maps + regression. Apply nonlinear activation function
-$\varphi$ after weighted $\sum$ of inputs. Can learn nonlinear features.
+Parametrized feature maps. Can learn nonlinear features.
 \emph{Forward propagation} in layer $\ell$: ($v^{(0)} = x$): $v^{(\ell)} =
-\varphi (z^{(\ell)}) = \varphi(W^{(\ell)} v^{(\ell-1)})$
+\varphi (z^{(\ell)}) = \varphi(W^{(\ell)} v^{(\ell-1)})$.
 
-Output layer: $y = f = W^{(L-1)} v^{(L-1)}$. ($f$ can be vector)
+Output layer: $y = f = W^{(L-1)} v^{(L-1)}$.
 
 Weight optimization: Apply loss $\ell(y - f(x, W))$, optimize weights to
 minimize loss. For multi-outputs sum losses.
 
-\begin{tabular}{lll}
-    Sigmoid & $\frac{1}{1+\exp(-z)}$ & \green{diff. everywhere}, \red{$\approx
-    0$ far from $0$} \\
-    Tanh & $\frac{\exp(z) - \exp(-z)}{exp(z) + \exp(-z)}$ & \green{diff. everywhere}, \red{$\approx
-    0$ far from $0$} \\
-    ReLu & $\max(0, z)$ & \red{not diff.} at $0$, \green{$\varphi' = 1$} if $z > 0$
-\end{tabular}
+Sigmoid: $\frac{1}{1+\exp(-z)}$, Tanh: $\frac{\exp(z) - \exp(-z)}{exp(z) + \exp(-z)}$, ReLu: $\max(0, z)$. Sigmoid and Tanh:  \green{diff. everywhere}, but gradient \red{$\approx
+    0$ if $x \neq 0$}. ReLu: \red{not diff.} at $0$, \green{$\varphi' = 1$} if $z > 0$.
 
-\emph{Back propagation}: $\delta^{(L)} = l'(f) = \begin{bmatrix}l'(f_1) & \dots
-& l'(f_p)\end{bmatrix}$, and $\nabla_{W^{(L)}} \ell(W;y,x) = \delta^{(L)}
+\emph{Back prop.}: $\delta^{(L)} = l'(f) = [l'(f_1) ,..., l'(f_p)]$, and $\nabla_{W^{(L)}} \ell(W;y,x) = \delta^{(L)}
 v^{(L-1)T}$. For $\ell < L$: $\delta^{(\ell)} = \varphi' (z^{(\ell)}) \odot
 (W^{(\ell+1)T}\delta^{(\ell+1)})$ and $\nabla_{w^{\ell}} \ell(W;y,x) =
 \delta^{(\ell)}v^{(\ell-1)T}$
 
-\red{Nonconvex optimization}, initialization matters! Random works well.
+\red{Nonconvex optimization}, initialization matters.
 
 \begin{tabular}{ll}
 Glorot (tanh): & $w_{i,j}  \sim \mathcal{N}(0, 1/n_{in})$  \\
@@ -33,8 +26,11 @@ He (ReLU):     & $w_{i,j}  \sim \mathcal{N}(0, 2/(n_{in}))$
 \end{tabular}
 
 Learning rate $\eta_t$ \emph{decreasing} (e.g.\ $min(0.1,100/t)$) to \green{prevent
-oscillation}. Momentum ($m<1$, $a \leftarrow m \cdot a + \eta_t \nabla_w \ell(W;y,x); W \leftarrow W - a$) can
-\green{avoid local minima}.
+oscillation}. 
+
+Momentum ($m<1, a \leftarrow m \cdot a + \eta_t \nabla_w$
+
+$ \ell(W;y,x), W \leftarrow W - a$), \green{avoid local minima}.
 
 Many parameters $\rightarrow$ \red{overfitting}! \emph{Early stop} or
 \emph{regularization $(\lambda \norm{W}_F^2)$} to prevent. Also \emph{dropout},
